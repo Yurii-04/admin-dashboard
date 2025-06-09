@@ -7,7 +7,7 @@ import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { Tokens } from './types';
-import { JwtPayload } from './types/jwtPayload.type';
+import { JwtPayload } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { HashingService } from '../hashing/hashing.service';

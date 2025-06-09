@@ -1,11 +1,11 @@
-import { Button, Checkbox, ThemeProvider } from '@mui/material';
+import { ThemeProvider } from '@mui/material';
 import { theme } from './styles/app-theme/';
+import { Outlet } from 'react-router-dom';
 
-function App() {
+const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <Button variant='contained'>Test</Button>
-      <Checkbox />
+      <Outlet />
     </ThemeProvider>
   )
 }
