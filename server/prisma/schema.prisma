@@ -8,17 +8,27 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
+  id             String   @id @default(uuid())
   email          String   @unique
   hashedPassword String   @map("hashed_password")
   hashedRt       String?  @map("hashed_rt")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
-  role UserRole @default(VIEWER)
+  role           UserRole @default(VIEWER)
 
   @@map("users")
 }
 
+model Task {
+  id String @id @default(uuid())
+  title String
+  description String?
+  status Boolean @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("tasks")
+}
 
 enum UserRole {
   ADMIN

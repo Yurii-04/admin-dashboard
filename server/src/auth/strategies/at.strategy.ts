@@ -19,6 +19,10 @@ export class AtStrategy extends PassportStrategy(Strategy, 'jwt') {
   }
 
   validate(payload: JwtPayload) {
-    return payload;
+    return {
+      sub: payload.sub,
+      email: payload.email,
+      role: payload.role
+    };
   }
 }

@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { AuthModule } from './auth/auth.module';
-import { PismaModule } from './pisma/pisma.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { UserModule } from './user/user.module';
 import { HashingModule } from './hashing/hashing.module';
 import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { AtGuard } from './common/guards';
+import { AtGuard, RolesGuard } from './common/guards';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
@@ -13,9 +14,10 @@ import { AtGuard } from './common/guards';
       isGlobal: true,
     }),
     AuthModule,
-    PismaModule,
+    PrismaModule,
     UserModule,
     HashingModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [
@@ -23,6 +25,10 @@ import { AtGuard } from './common/guards';
       provide: APP_GUARD,
       useClass: AtGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    }
   ],
 })
 export class AppModule {}

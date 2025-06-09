@@ -8,6 +8,6 @@ export class UserController {
 
   @Get('/me')
   async getMe(@GetCurrentUserId() userId: string) {
-    return this.userService.getMe(userId)
+    return this.userService.getMe(userId);
   }
 }

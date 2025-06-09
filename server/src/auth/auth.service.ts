@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
-import { PrismaService } from '../pisma/pisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { UserService } from '../user/user.service';
 import { Tokens } from './types';
 import { JwtPayload } from './types/jwtPayload.type';
@@ -33,7 +33,7 @@ export class AuthService {
 
     const user = await this.userService.save(dto);
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRt(user.id, tokens.refreshToken);
     return tokens;
   }
@@ -53,7 +53,7 @@ export class AuthService {
       throw new ForbiddenException('Wrong email or password');
     }
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRt(user.id, tokens.refreshToken);
 
     return tokens;
@@ -66,10 +66,11 @@ export class AuthService {
     });
   }
 
-  private async getTokens(userId: string, email: string): Promise<Tokens> {
+  private async getTokens(userId: string, email: string, role: string): Promise<Tokens> {
     const jwtPayload: JwtPayload = {
       sub: userId,
       email,
+      role
     };
 
     const [accessToken, refreshToken] = await Promise.all([
@@ -105,7 +106,6 @@ export class AuthService {
   private getCookieOptions() {
     return {
       httpOnly: true,
-      domain: this.configService.get<string>('SERVER_DOMAIN') ?? undefined,
       sameSite: 'strict' as const,
     };
   }
@@ -126,7 +126,7 @@ export class AuthService {
       throw new ForbiddenException('Access Denied');
     }
 
-    const tokens = await this.getTokens(user.id, user.email);
+    const tokens = await this.getTokens(user.id, user.email, user.role);
     await this.updateRt(user.id, tokens.refreshToken);
 
     return tokens;

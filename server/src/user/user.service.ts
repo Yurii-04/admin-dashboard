@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../pisma/pisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { HashingService } from '../hashing/hashing.service';
 import { RegisterDto } from '../auth/dto/auth.dto';
 
@@ -13,7 +13,7 @@ export class UserService {
   async findByEmail(email: string) {
     return this.prisma.user.findUnique({
       where: { email },
-    })
+    });
   }
 
   async save(dto: RegisterDto) {
@@ -23,16 +23,16 @@ export class UserService {
         email: dto.email,
         hashedPassword,
         role: dto.role,
-      }
-    })
+      },
+    });
   }
 
   async findById(id: string) {
     return this.prisma.user.findUnique({
       where: {
-        id
-      }
-    })
+        id,
+      },
+    });
   }
 
   async getMe(userId: string) {
@@ -41,7 +41,7 @@ export class UserService {
         hashedRt: true,
         hashedPassword: true,
       },
-      where: {id: userId}
-    })
+      where: { id: userId },
+    });
   }
 }

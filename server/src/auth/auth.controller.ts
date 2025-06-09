@@ -1,9 +1,10 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import { Response, Request } from 'express'
 import { GetCurrentUserId, Public } from '../common/decorators';
 import { AccessToken } from './types';
+import { RtGuard } from '../common/guards';
 
 @Controller('auth')
 export class AuthController {
@@ -42,12 +43,13 @@ export class AuthController {
   }
 
   @Public()
+  @UseGuards(RtGuard)
   @Post('/refresh')
   async refresh(
     @GetCurrentUserId() userId: string,
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
-  ): Promise<AccessToken> {
+  ) {
     const { refreshToken: refreshTokenFromCookies } = req.cookies;
     const { accessToken, refreshToken } = await this.authService.refreshTokens(
       userId,
